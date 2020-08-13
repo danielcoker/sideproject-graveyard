@@ -1,18 +1,32 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" class="block m-auto" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div>
+    <Header />
+
+    <Hero />
+
+    <main></main>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue';
+import Header from '@/components/Header.vue';
+import Hero from '@/components/Hero.vue';
 
 export default {
   name: 'Home',
   components: {
-    HelloWorld,
+    Header,
+    Hero,
+  },
+  data() {
+    return {
+      hidden: true,
+    };
+  },
+  methods: {
+    toggleNavContent() {
+      document.getElementById('nav-content').classList.toggle('hidden');
+    },
   },
 };
 </script>
