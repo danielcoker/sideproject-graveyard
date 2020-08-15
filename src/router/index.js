@@ -23,6 +23,11 @@ const routes = [
     name: 'Search',
     component: () => import(/* webPackChunkName: "search" */ '../views/Search.vue'),
   },
+  {
+    path: '/projects/:projectId',
+    name: 'Details',
+    component: () => import(/* webPackChunkName: "details" */ '../views/Details.vue'),
+  },
 ];
 
 const router = new VueRouter({
