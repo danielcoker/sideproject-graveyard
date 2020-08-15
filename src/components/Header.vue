@@ -20,7 +20,7 @@
       <div id="nav-content" class="w-full hidden flex-grow lg:flex lg:items-center lg:w-auto">
         <div class="flex flex-col ml-auto items-center font-semibold lg:mt-0 lg:flex-row">
           <router-link
-            :to="{ name: 'Home' }"
+            :to="{ name: 'Search' }"
             class="my-2 flex lg:my-0 mx-2 pr-2 border-r border-dark"
           >
             Search
