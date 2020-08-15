@@ -3,3 +3,7 @@
     <router-view />
   </div>
 </template>
+
+<style>
+@import '../public/build/tailwind.css';
+</style>
