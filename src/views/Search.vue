@@ -2,7 +2,7 @@
   <div>
     <Header />
 
-    <section class="pt-24 lg:pt-24 pb-24">
+    <section class="py-24">
       <div class="w-2/3 m-auto text-center">
         <router-link :to="{ name: 'Home' }" class="hover:underline mx-1">Home</router-link> /
         <h1 class="font-bold mt-1 text-xl lg:text-2xl leading-none">Search Results</h1>
