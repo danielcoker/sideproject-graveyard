@@ -5,7 +5,7 @@
     <section class="pt-24 lg:pt-24 pb-24">
       <div class="w-2/3 m-auto text-center">
         <router-link :to="{ name: 'Home' }" class="hover:underline mx-1">Home</router-link> /
-        <h1 class="font-bold mt-1 text-lg lg:text-2xl leading-none">Search Results</h1>
+        <h1 class="font-bold mt-1 text-xl lg:text-2xl leading-none">Search Results</h1>
         <form action="" class="mt-5 lg:w-2/3 m-auto">
           <input
             class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none"
