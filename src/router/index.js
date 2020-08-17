@@ -35,6 +35,11 @@ const routes = [
     name: 'Dashboard',
     component: () => import(/* webPackChunkName: "dasboard" */ '../views/Dashboard.vue'),
   },
+  {
+    path: '/project/new',
+    name: 'AddProject',
+    component: () => import(/* webPackChunkName: "addProject" */ '../views/AddProject.vue'),
+  },
 ];
 
 const router = new VueRouter({

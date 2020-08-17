@@ -12,10 +12,12 @@
   "dependencies": {
     "autoprefixer": "^9.8.6",
     "core-js": "^3.6.5",
+    "marked": "^1.1.1",
     "postcss-cli": "^7.1.1",
     "tailwindcss": "^1.6.2",
     "vue": "^2.6.11",
-    "vue-router": "^3.2.0"
+    "vue-router": "^3.2.0",
+    "vue-select": "^3.10.8"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
