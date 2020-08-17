@@ -30,6 +30,11 @@ const routes = [
     name: 'SignIn',
     component: () => import(/* webPackChunkName: "signin" */ '../views/SignIn.vue'),
   },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import(/* webPackChunkName: "dasboard" */ '../views/Dashboard.vue'),
+  },
 ];
 
 const router = new VueRouter({
