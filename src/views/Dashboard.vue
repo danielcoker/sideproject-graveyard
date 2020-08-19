@@ -14,7 +14,7 @@
         <img src="../assets/no_data.svg" class="w-64 m-auto" alt="No data" />
 
         <router-link
-          :to="{ name: 'Home' }"
+          :to="{ name: 'AddProject' }"
           class="my-10 flex justify-center w-6/12 m-auto btn py-4"
         >
           <p>Add Project</p>
