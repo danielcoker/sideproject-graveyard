@@ -73,11 +73,18 @@
 </template>
 
 <script>
+import firebase from 'firebase';
 import marked from 'marked';
+import { Octokit } from '@octokit/rest';
+import { createAppAuth } from '@octokit/auth-app';
+// eslint-disable-next-line import/no-extraneous-dependencies
+// import { createTokenAuth } from '@octokit/auth-token';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import 'vue-select/dist/vue-select.css';
 import '../assets/css/markdown.css';
+
+const authUser = JSON.parse(localStorage.getItem('user'));
 
 export default {
   name: 'AddProject',
@@ -87,13 +94,49 @@ export default {
   },
   data() {
     return {
-      input: '# Hello, World!',
+      input: '',
     };
   },
   computed: {
     compiledMarkdown() {
       return marked(this.input, { sanitize: true });
     },
+  },
+
+  mounted() {
+    firebase.auth().onAuthStateChanged(async () => {
+      // if (authUser.uid === user.uid) {
+      //   const repos = await octokit.repos.listForAuthenticatedUser();
+      //   console.log(repos);
+      // }
+
+      // const auth = createTokenAuth(authUser.stsTokenManager.accessToken);
+      // const authentication = await auth();
+
+      // const octokit = new Octokit({
+      //   type: 'token',
+      //   auth: authentication.token,
+      //   userAgent: 'Side Project Graveyard',
+      // });
+
+      // const { data } = await octokit.request('/user');
+
+      // console.log(data);
+
+      const appOctokit = new Octokit({
+        authStrategy: createAppAuth,
+        auth: {
+          id: '',
+          privateKey: authUser.stsTokenManager.apiKey,
+        },
+      });
+
+      const { appData } = await appOctokit.request('/users');
+
+      console.log(appData);
+
+      // console.log(await octokit.repos.listForAuthenticatedUser());
+    });
   },
 };
 </script>
