@@ -26,6 +26,7 @@
               id="username"
               type="text"
               placeholder="Project Title"
+              v-model="project.title"
             />
           </div>
 
@@ -37,7 +38,7 @@
               class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none"
               rows="10"
               placeholder="Project Description"
-              v-model="input"
+              v-model="project.description"
             ></textarea>
           </div>
 
@@ -47,7 +48,13 @@
             <label class="block text-gray-700 tracking-wide text-sm font-bold mb-2">
               GitHub Repository
             </label>
-            <v-select class="vs-select-style" :options="['Nodejs', 'Python']" />
+            <v-select
+              class="vs-select-style"
+              v-if="repos && repos.length"
+              :options="repos"
+              @input="updateRepo"
+            />
+            <p v-else class="text-sm">Fetching repos...</p>
           </div>
 
           <div class="mb-4">
@@ -59,7 +66,10 @@
               taggable
               multiple
               push-tags
-              :options="['Nodejs', 'Python']"
+              :options="tags"
+              @search="fetchTags"
+              @input="updateTags"
+              @close="updateOptionsList"
             />
           </div>
 
@@ -76,15 +86,10 @@
 import firebase from 'firebase';
 import marked from 'marked';
 import { Octokit } from '@octokit/rest';
-import { createAppAuth } from '@octokit/auth-app';
-// eslint-disable-next-line import/no-extraneous-dependencies
-// import { createTokenAuth } from '@octokit/auth-token';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import 'vue-select/dist/vue-select.css';
 import '../assets/css/markdown.css';
-
-const authUser = JSON.parse(localStorage.getItem('user'));
 
 export default {
   name: 'AddProject',
@@ -94,48 +99,53 @@ export default {
   },
   data() {
     return {
-      input: '',
+      token: window.localStorage.getItem('token'),
+      octokit: undefined,
+      repos: [],
+      tags: [],
+      project: {
+        title: null,
+        description: '',
+        repo: null,
+        tags: null,
+      },
     };
   },
   computed: {
     compiledMarkdown() {
-      return marked(this.input, { sanitize: true });
+      return marked(this.project.description, { sanitize: true });
     },
   },
-
+  methods: {
+    updateRepo(repo) {
+      this.project.repo = repo;
+    },
+    fetchTags(search) {
+      this.octokit.search
+        .topics({ q: search })
+        .then((topics) => {
+          this.tags = topics.data.items.map((topic) => topic.name);
+        })
+        .catch(() => {});
+    },
+    updateTags(tags) {
+      this.project.tags = tags;
+    },
+    updateOptionsList() {
+      if (this.project.tags !== null) {
+        this.tags = this.project.tags;
+      }
+    },
+  },
   mounted() {
     firebase.auth().onAuthStateChanged(async () => {
-      // if (authUser.uid === user.uid) {
-      //   const repos = await octokit.repos.listForAuthenticatedUser();
-      //   console.log(repos);
-      // }
-
-      // const auth = createTokenAuth(authUser.stsTokenManager.accessToken);
-      // const authentication = await auth();
-
-      // const octokit = new Octokit({
-      //   type: 'token',
-      //   auth: authentication.token,
-      //   userAgent: 'Side Project Graveyard',
-      // });
-
-      // const { data } = await octokit.request('/user');
-
-      // console.log(data);
-
-      const appOctokit = new Octokit({
-        authStrategy: createAppAuth,
-        auth: {
-          id: '',
-          privateKey: authUser.stsTokenManager.apiKey,
-        },
+      this.octokit = new Octokit({
+        auth: this.token,
       });
 
-      const { appData } = await appOctokit.request('/users');
+      const userRepos = await this.octokit.repos.listForAuthenticatedUser();
 
-      console.log(appData);
-
-      // console.log(await octokit.repos.listForAuthenticatedUser());
+      this.repos = userRepos.data.map((userRepo) => userRepo.full_name);
     });
   },
 };
