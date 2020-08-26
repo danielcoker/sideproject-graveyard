@@ -42,17 +42,13 @@ export default {
           const token = result.credential.accessToken;
           const { user } = result;
 
-          user.token = token;
+          window.localStorage.setItem('token', token);
+          window.localStorage.setItem('userId', user.uid);
 
-          window.localStorage.setItem('user', JSON.stringify(user));
           this.$router.push({ name: 'Dashboard' });
         })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-
-          // eslint-disable-next-line no-console
-          console.log(errorCode, errorMessage);
+        .catch(() => {
+          // Error
         });
     },
   },

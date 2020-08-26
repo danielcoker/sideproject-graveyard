@@ -1,7 +1,7 @@
 .compiled-markdown {
   word-wrap: break-word;
   line-height: 1.7;
-  padding: 0 20px 20px 20px;
+  padding: 0 20px 20px 0;
   width: 722px;
   -webkit-font-smoothing: antialiased;
 }
@@ -22,7 +22,7 @@
 .compiled-mardown dl,
 .compiled-mardown table,
 .compiled-mardown pre {
-  margin: 15px 0;
+  margin: 10px 0;
 }
 
 .compiled-markdown ul,
@@ -74,7 +74,7 @@
 .compiled-markdown h6 {
   font-weight: bold;
   line-height: 1.7;
-  margin: 1em 0 15px 0;
+  margin: 1em 0 0 0;
 }
 
 .compiled-markdown h1 + p,

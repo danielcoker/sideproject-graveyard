@@ -16,16 +16,16 @@
 
     <main class="w-11/12 ml-auto mr-auto mb-10">
       <section class="w-full md:w-6/12 m-auto">
-        <form action="">
+        <form @submit.prevent="addProject">
           <div class="mb-4">
             <label class="block text-gray-700 tracking-wide text-sm font-bold mb-2">
               Project Title
             </label>
             <input
               class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none"
-              id="username"
               type="text"
               placeholder="Project Title"
+              v-model="project.title"
             />
           </div>
 
@@ -37,17 +37,23 @@
               class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none"
               rows="10"
               placeholder="Project Description"
-              v-model="input"
+              v-model="project.description"
             ></textarea>
           </div>
 
-          <div class="mb-4 compiled-markdown" v-html="compiledMarkdown"></div>
+          <div class="ml-0 mb-4 compiled-markdown" v-html="compiledMarkdown"></div>
 
           <div class="mb-4">
             <label class="block text-gray-700 tracking-wide text-sm font-bold mb-2">
               GitHub Repository
             </label>
-            <v-select class="vs-select-style" :options="['Nodejs', 'Python']" />
+            <v-select
+              class="vs-select-style"
+              v-if="repos && repos.length"
+              :options="repos"
+              @input="updateRepo"
+            />
+            <p v-else class="text-sm">Fetching repos...</p>
           </div>
 
           <div class="mb-4">
@@ -59,11 +65,16 @@
               taggable
               multiple
               push-tags
-              :options="['Nodejs', 'Python']"
+              :options="tags"
+              @search="fetchTags"
+              @input="updateTags"
+              @close="updateOptionsList"
             />
           </div>
 
-          <button type="submit" class="mt-3 btn">Add Project</button>
+          <p v-if="message" class="text-red-600 font-semibold">{{ message }}</p>
+          <!-- <button type="submit" class="mt-3 btn">Add Project</button> -->
+          <SubmitButton :value="'Add Project'" :loading="loading" />
         </form>
       </section>
     </main>
@@ -73,9 +84,12 @@
 </template>
 
 <script>
+import firebase from 'firebase';
 import marked from 'marked';
+import { Octokit } from '@octokit/rest';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
+import SubmitButton from '@/components/SubmitButton.vue';
 import 'vue-select/dist/vue-select.css';
 import '../assets/css/markdown.css';
 
@@ -84,16 +98,84 @@ export default {
   components: {
     Header,
     Footer,
+    SubmitButton,
   },
   data() {
     return {
-      input: '# Hello, World!',
+      token: window.localStorage.getItem('token'),
+      octokit: undefined,
+      message: null,
+      loading: false,
+      repos: [],
+      tags: [],
+      project: {
+        title: null,
+        description: '',
+        repo: null,
+        tags: null,
+      },
     };
   },
   computed: {
     compiledMarkdown() {
-      return marked(this.input, { sanitize: true });
+      return marked(this.project.description, { sanitize: true });
     },
+  },
+  methods: {
+    addProject() {
+      const vm = this;
+
+      firebase.auth().onAuthStateChanged(async (user) => {
+        if (vm.project.title || vm.project.description || vm.project.repo || vm.project.tags) {
+          vm.loading = true;
+          vm.project.user = user.uid;
+          vm.project.description = marked(vm.project.description, { sanitize: true });
+
+          firebase
+            .firestore()
+            .collection('projects')
+            .add(vm.project)
+            .then((doc) => {
+              vm.$router.push({ name: 'ProjectDetails', params: { projectId: doc.id } });
+            })
+            .catch(() => {
+              // Error
+            });
+        } else {
+          vm.message = 'All fields are required.';
+        }
+      });
+    },
+    updateRepo(repo) {
+      this.project.repo = repo;
+    },
+    fetchTags(search) {
+      this.octokit.search
+        .topics({ q: search })
+        .then((topics) => {
+          this.tags = topics.data.items.map((topic) => topic.name);
+        })
+        .catch(() => {});
+    },
+    updateTags(tags) {
+      this.project.tags = tags;
+    },
+    updateOptionsList() {
+      if (this.project.tags !== null) {
+        this.tags = this.project.tags;
+      }
+    },
+  },
+  mounted() {
+    firebase.auth().onAuthStateChanged(async () => {
+      this.octokit = new Octokit({
+        auth: this.token,
+      });
+
+      const userRepos = await this.octokit.repos.listForAuthenticatedUser();
+
+      this.repos = userRepos.data.map((userRepo) => userRepo.full_name);
+    });
   },
 };
 </script>
