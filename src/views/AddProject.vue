@@ -4,12 +4,9 @@
 
     <section class="py-24">
       <div class="w-2/3 m-auto text-center">
-        <router-link :to="{ name: 'Home' }" class="hover:underline mx-1">Home</router-link>
-        /
-        <router-link :to="{ name: 'Dashboard' }" class="hover:underline mx-1">
-          Dashboard
-        </router-link>
-        /
+        <router-link :to="{ name: 'Home' }" class="hover:underline mx-1">Home</router-link>/
+        <router-link :to="{ name: 'Dashboard' }" class="hover:underline mx-1">Dashboard</router-link
+        >/
         <h1 class="font-bold mt-1 text-xl lg:text-2xl leading-none">Add Project</h1>
       </div>
     </section>
@@ -18,9 +15,9 @@
       <section class="w-full md:w-6/12 m-auto">
         <form @submit.prevent="addProject">
           <div class="mb-4">
-            <label class="block text-gray-700 tracking-wide text-sm font-bold mb-2">
-              Project Title
-            </label>
+            <label class="block text-gray-700 tracking-wide text-sm font-bold mb-2"
+              >Project Title</label
+            >
             <input
               class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none"
               type="text"
@@ -30,23 +27,23 @@
           </div>
 
           <div class="mb-4">
-            <label class="block text-gray-700 tracking-wide text-sm font-bold mb-2">
-              Project Description
-            </label>
+            <label class="block text-gray-700 tracking-wide text-sm font-bold mb-2"
+              >Project Description</label
+            >
             <textarea
               class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none"
               rows="10"
               placeholder="Project Description"
-              v-model="project.description"
+              v-model="markdownInput"
             ></textarea>
           </div>
 
           <div class="ml-0 mb-4 compiled-markdown" v-html="compiledMarkdown"></div>
 
           <div class="mb-4">
-            <label class="block text-gray-700 tracking-wide text-sm font-bold mb-2">
-              GitHub Repository
-            </label>
+            <label class="block text-gray-700 tracking-wide text-sm font-bold mb-2"
+              >GitHub Repository</label
+            >
             <v-select
               class="vs-select-style"
               v-if="repos && repos.length"
@@ -57,9 +54,7 @@
           </div>
 
           <div class="mb-4">
-            <label class="block text-gray-700 tracking-wide text-sm font-bold mb-2">
-              Tags
-            </label>
+            <label class="block text-gray-700 tracking-wide text-sm font-bold mb-2">Tags</label>
             <v-select
               class="vs-select-style"
               taggable
@@ -108,9 +103,10 @@ export default {
       loading: false,
       repos: [],
       tags: [],
+      markdownInput: '',
       project: {
         title: null,
-        description: '',
+        description: null,
         repo: null,
         tags: null,
       },
@@ -118,7 +114,7 @@ export default {
   },
   computed: {
     compiledMarkdown() {
-      return marked(this.project.description, { sanitize: true });
+      return marked(this.markdownInput, { sanitize: true });
     },
   },
   methods: {
@@ -129,7 +125,7 @@ export default {
         if (vm.project.title || vm.project.description || vm.project.repo || vm.project.tags) {
           vm.loading = true;
           vm.project.user = user.uid;
-          vm.project.description = marked(vm.project.description, { sanitize: true });
+          vm.project.description = marked(vm.markdownInput, { sanitize: true });
 
           firebase
             .firestore()
