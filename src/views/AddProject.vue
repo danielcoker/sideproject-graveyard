@@ -130,7 +130,7 @@ export default {
           firebase
             .firestore()
             .collection('projects')
-            .add(vm.project)
+            .add({ ...vm.project, createdAt: firebase.firestore.Timestamp.now() })
             .then((doc) => {
               vm.$router.push({ name: 'ProjectDetails', params: { projectId: doc.id } });
             })
