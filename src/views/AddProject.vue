@@ -80,11 +80,11 @@
 
 <script>
 import firebase from 'firebase';
-import marked from 'marked';
 import { Octokit } from '@octokit/rest';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
+import * as MarkdownService from '../assets/js/markdown';
 import 'vue-select/dist/vue-select.css';
 import '../assets/css/markdown.css';
 
@@ -114,7 +114,8 @@ export default {
   },
   computed: {
     compiledMarkdown() {
-      return marked(this.markdownInput, { sanitize: true });
+      // return marked(this.markdownInput, { sanitize: true });
+      return MarkdownService.convertToHTML(this.markdownInput);
     },
   },
   methods: {
@@ -125,7 +126,7 @@ export default {
         if (vm.project.title || vm.project.description || vm.project.repo || vm.project.tags) {
           vm.loading = true;
           vm.project.user = user.uid;
-          vm.project.description = marked(vm.markdownInput, { sanitize: true });
+          vm.project.description = MarkdownService.convertToHTML(this.markdownInput);
 
           firebase
             .firestore()
