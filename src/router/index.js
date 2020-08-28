@@ -40,6 +40,11 @@ const routes = [
     name: 'AddProject',
     component: () => import(/* webPackChunkName: "addProject" */ '../views/AddProject.vue'),
   },
+  {
+    path: '/projects/:projectId/edit',
+    name: 'EditProject',
+    component: () => import(/* webPackChunkName: "editProject" */ '../views/EditProject.vue'),
+  },
 ];
 
 const router = new VueRouter({
