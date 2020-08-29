@@ -22,7 +22,8 @@
     "turndown": "^6.0.0",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
-    "vue-select": "^3.10.8"
+    "vue-select": "^3.10.8",
+    "vue-timeago": "^5.1.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
