@@ -66,11 +66,21 @@ export default {
             const token = result.credential.accessToken;
             const { user } = result;
 
-            window.localStorage.removeItem('SignInWithRedirect');
-            window.localStorage.setItem('token', token);
-            window.localStorage.setItem('userId', user.uid);
+            firebase
+              .firestore()
+              .collection('users')
+              .doc(user.uid)
+              .set({
+                displayName: user.displayName,
+                photoURL: user.photoURL,
+              })
+              .then(() => {
+                window.localStorage.removeItem('SignInWithRedirect');
+                window.localStorage.setItem('token', token);
+                window.localStorage.setItem('userId', user.uid);
 
-            this.$router.push({ name: 'Dashboard' });
+                this.$router.push({ name: 'Dashboard' });
+              });
           }
         })
         .catch(() => {
