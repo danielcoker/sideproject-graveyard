@@ -2,10 +2,16 @@ import Vue from 'vue';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import vSelect from 'vue-select';
+import VueTimeago from 'vue-timeago';
 import App from './App.vue';
 import router from './router';
 
 Vue.config.productionTip = false;
+
+Vue.use(VueTimeago, {
+  name: 'Timeago',
+  locale: 'en',
+});
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCIO4cuTXxpZPxmkOJbevghAxPTpW9pkVo',
