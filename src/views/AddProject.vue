@@ -133,7 +133,7 @@ export default {
             .collection('projects')
             .add({ ...vm.project, createdAt: firebase.firestore.Timestamp.now() })
             .then((doc) => {
-              vm.$router.push({ name: 'ProjectDetails', params: { projectId: doc.id } });
+              vm.$router.push({ name: 'ViewProject', params: { projectId: doc.id } });
             })
             .catch(() => {
               // Error
