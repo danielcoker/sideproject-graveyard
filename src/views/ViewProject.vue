@@ -48,6 +48,23 @@
             </a>
           </li>
         </ul>
+
+        <div class="mt-8">
+          <router-link
+            :to="{ name: 'EditProject', params: { projectId: project.id } }"
+            class="my-2 lg:my-0 btn bg-green-600"
+          >
+            Edit
+          </router-link>
+
+          <button
+            class="my-2 lg:my-0 mx-2 btn bg-red-600"
+            @click.prevent="deleteProject(project.id)"
+            :disabled="isDeletingProject"
+          >
+            Delete
+          </button>
+        </div>
       </section>
     </main>
 
@@ -83,7 +100,28 @@ export default {
         tags: null,
         repoURL: null,
       },
+      isDeletingProject: false,
     };
+  },
+  methods: {
+    deleteProject(projectId) {
+      const vm = this;
+
+      vm.isDeletingProject = true;
+
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          firebase
+            .firestore()
+            .collection('projects')
+            .doc(projectId)
+            .delete()
+            .then(() => {
+              vm.$router.push({ name: 'Home' });
+            });
+        }
+      });
+    },
   },
   mounted() {
     const vm = this;
@@ -97,7 +135,7 @@ export default {
       .get()
       .then((doc) => {
         if (doc.exists) {
-          vm.project = { ...doc.data() };
+          vm.project = { ...doc.data(), id: doc.id };
           vm.project.repoURL = `https://github.com/${vm.project.repo}`;
 
           const userRef = firebase
@@ -132,3 +170,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+button:disabled,
+button[disabled] {
+  background-color: #cccccc;
+  color: #666666;
+}
+</style>
