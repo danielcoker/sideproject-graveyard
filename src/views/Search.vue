@@ -21,6 +21,12 @@
 
     <main class="w-11/12 ml-auto mr-auto mb-10">
       <Projects :projects="projects" :busy="busy" @loadmore="loadMore" />
+
+      <div v-if="resultIsEmpty && !busy" class="m-auto">
+        <img src="../assets/no_data.svg" class="w-48 m-auto" alt="No data" />
+
+        <p class="text-xl mt-5 text-center">No project found</p>
+      </div>
     </main>
 
     <Footer />
@@ -46,6 +52,7 @@ export default {
       lastVisible: null,
       busy: true,
       query: this.$route.query.q,
+      resultIsEmpty: false,
     };
   },
   methods: {
@@ -141,6 +148,12 @@ export default {
         });
 
         vm.busy = false;
+
+        if (!vm.projects.length) {
+          vm.resultIsEmpty = true;
+        } else {
+          vm.resultIsEmpty = false;
+        }
       });
     },
   },
