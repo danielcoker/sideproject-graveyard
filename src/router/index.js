@@ -22,7 +22,7 @@ const routes = [
   },
   {
     path: '/projects/:projectId',
-    name: 'ProjectDetails',
+    name: 'ViewProject',
     component: () => import(/* webPackChunkName: "viewProject" */ '../views/ViewProject.vue'),
   },
   {
