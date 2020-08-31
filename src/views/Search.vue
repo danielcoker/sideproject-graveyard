@@ -145,7 +145,11 @@ export default {
     },
   },
   mounted() {
-    this.getFirstQueryResults();
+    if (this.query) {
+      this.getFirstQueryResults();
+    } else {
+      this.busy = false;
+    }
   },
 };
 </script>
