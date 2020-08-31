@@ -1,150 +1,94 @@
 <template>
-  <section class="w-full md:w-2/3 m-auto flex flex-col space-y-5">
+  <section
+    v-infinite-scroll="loadMore"
+    infinite-scroll-disabled="busy"
+    infinite-scroll-distance="10"
+    class="w-full md:w-2/3 m-auto flex flex-col space-y-5"
+  >
     <h3 class="font-bold text-xl">{{ resultCount ? `${resultCount} projects found` : '' }}</h3>
 
-    <article class="bg-white rounded shadow py-5 px-5">
-      <h2 class="font-semibold text-xl">Project Title</h2>
+    <article
+      v-for="(project, index) in projects"
+      :key="index"
+      class="bg-white rounded shadow py-5 px-5"
+    >
+      <router-link :to="{ name: 'ViewProject', params: { projectId: project.id } }">
+        <h2 class="font-semibold text-xl">{{ project.title }}</h2>
+      </router-link>
       <p class="mt-1">
-        This is a long description of the project. Hope to add more description to this. All these
-        is just to make this description longer than it should actually be.
+        {{
+          stripHTMLTags(project.description).length > 300
+            ? `${stripHTMLTags(project.description).substring(0, 300)}...`
+            : stripHTMLTags(project.description)
+        }}
       </p>
       <ul class="flex flex-row flex-wrap mt-2">
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">python</a>
-        </li>
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">nodejs</a>
-        </li>
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">api</a>
-        </li>
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">dynamo</a>
-        </li>
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">mapper</a>
-        </li>
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">heroku</a>
+        <li v-for="(tag, index) in project.tags" :key="index">
+          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">
+            {{ tag }}
+          </a>
         </li>
       </ul>
       <hr class="my-3" />
       <div class="flex space-x-2 items-center">
-        <a href="#" class="flex space-x-2">
+        <a :href="`https://github.com/${project.user.username}`" class="flex space-x-2">
           <p class="h-6 w-6">
             <img
-              src="https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-4.png"
-              alt="Profile Picture"
+              :src="project.user.photoURL ? project.user.photoURL : defaultProfileImage"
+              :alt="`${project.user.displayName}'s profile picture`"
               class="h-full w-full mr-2 object-cover rounded-full"
             />
           </p>
-          <p>Daniel Coker</p>
+          <p>{{ project.user.displayName }}</p>
         </a>
         <p class="font-mono text-xs mt-1">
-          <span class="mr-1 font-bold">&middot;</span> 5 months ago
+          <span class="mr-1 font-bold">&middot;</span>
+          <timeago :datetime="project.createdAt.toDate()"></timeago>
         </p>
       </div>
     </article>
 
-    <article class="bg-white rounded shadow py-5 px-5">
-      <h2 class="font-semibold text-xl">Project Title</h2>
-      <p class="mt-1">
-        This is a long description of the project. Hope to add more description to this. All these
-        is just to make this description longer than it should actually be. This is a long
-        description of the project. Hope to add more description to this. All these is just to make
-        this description longer than it should actually be.
-      </p>
-      <ul class="flex flex-row flex-wrap mt-2">
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">python</a>
-        </li>
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">nodejs</a>
-        </li>
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">api</a>
-        </li>
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">dynamo</a>
-        </li>
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">mapper</a>
-        </li>
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">heroku</a>
-        </li>
-      </ul>
-      <hr class="my-3" />
-      <div class="flex space-x-2 items-center">
-        <a href="#" class="flex space-x-2">
-          <p class="h-6 w-6">
-            <img
-              src="https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-4.png"
-              alt="Profile Picture"
-              class="h-full w-full mr-2 object-cover rounded-full"
-            />
-          </p>
-          <p>Daniel Coker</p>
-        </a>
-        <p class="font-mono text-xs mt-1">
-          <span class="mr-1 font-bold">&middot;</span> 5 months ago
-        </p>
-      </div>
-    </article>
-
-    <article class="bg-white rounded shadow py-5 px-5">
-      <h2 class="font-semibold text-xl">Project Title</h2>
-      <p class="mt-1">
-        This is a long description of the project. Hope to add more description to this. All these
-        is just to make this description longer than it should actually be.
-      </p>
-      <ul class="flex flex-row flex-wrap mt-2">
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">python</a>
-        </li>
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">nodejs</a>
-        </li>
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">api</a>
-        </li>
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">dynamo</a>
-        </li>
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">mapper</a>
-        </li>
-        <li>
-          <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">heroku</a>
-        </li>
-      </ul>
-      <hr class="my-3" />
-      <div class="flex space-x-2 items-center">
-        <a href="#" class="flex space-x-2">
-          <p class="h-6 w-6">
-            <img
-              src="https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-4.png"
-              alt="Profile Picture"
-              class="h-full w-full mr-2 object-cover rounded-full"
-            />
-          </p>
-          <p>Daniel Coker</p>
-        </a>
-        <p class="font-mono text-xs mt-1">
-          <span class="mr-1 font-bold">&middot;</span> 5 months ago
-        </p>
-      </div>
-    </article>
+    <div class="flex justify-center">
+      <Spinner :loading="busy" />
+    </div>
   </section>
 </template>
 
 <script>
+import { stripTags } from 'underscore.string';
+import Spinner from './Spinner.vue';
+
 export default {
   name: 'Projects',
+  components: {
+    Spinner,
+  },
   props: {
     resultCount: {
       type: String,
       required: false,
+    },
+    projects: {
+      type: Array,
+      required: true,
+    },
+    busy: {
+      type: Boolean,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      defaultProfileImage:
+        'https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg',
+    };
+  },
+  methods: {
+    stripHTMLTags(htmlText) {
+      return stripTags(htmlText);
+    },
+    loadMore() {
+      this.$emit('loadmore');
     },
   },
 };

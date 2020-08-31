@@ -2,6 +2,7 @@ import Vue from 'vue';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import vSelect from 'vue-select';
+import infiniteScroll from 'vue-infinite-scroll';
 import VueTimeago from 'vue-timeago';
 import App from './App.vue';
 import router from './router';
@@ -12,6 +13,8 @@ Vue.use(VueTimeago, {
   name: 'Timeago',
   locale: 'en',
 });
+
+Vue.use(infiniteScroll);
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCIO4cuTXxpZPxmkOJbevghAxPTpW9pkVo',

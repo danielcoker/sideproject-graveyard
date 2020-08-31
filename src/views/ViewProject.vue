@@ -38,10 +38,10 @@
     </section>
 
     <main v-if="!pageLoading" class="w-11/12 ml-auto mr-auto mb-10">
-      <section class="w-full md:w-2/3 m-auto bg-white rounded shadow pb-5 px-5">
+      <section class="w-full md:w-2/3 m-auto bg-white rounded shadow py-5 px-5">
         <div class="ml-0 compiled-markdown" v-html="project.description"></div>
 
-        <ul class="flex flex-row flex-wrap mt-2">
+        <ul class="flex flex-row flex-wrap">
           <li v-for="(tag, index) in project.tags" :key="index">
             <a href="#" class="bg-light rounded px-3 py-1 mr-2 mt-2 inline-block lowercase">
               {{ tag }}
@@ -108,7 +108,7 @@ export default {
           userRef
             .get()
             .then((userDoc) => {
-              if (doc.exists) {
+              if (userDoc.exists) {
                 vm.user = {
                   displayName: userDoc.data().displayName,
                   photoURL: userDoc.data().photoURL,
