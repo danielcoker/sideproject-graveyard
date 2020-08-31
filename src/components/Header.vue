@@ -20,14 +20,26 @@
       <div id="nav-content" class="w-full hidden flex-grow lg:flex lg:items-center lg:w-auto">
         <div class="flex flex-col ml-auto items-center font-semibold lg:mt-0 lg:flex-row">
           <router-link
+            v-if="userLoggedIn"
+            :to="{ name: 'AddProject' }"
+            class="my-2 flex lg:my-0 mx-2"
+          >
+            Add Project
+          </router-link>
+
+          <router-link
             :to="{ name: 'Search' }"
             class="my-2 flex lg:my-0 mx-2 pr-2 border-r border-dark"
           >
             Search
           </router-link>
 
-          <router-link :to="{ name: 'Home' }" class="my-2 flex lg:my-0 mx-2 btn">
-            Sign up
+          <a v-if="userLoggedIn" href="#" @click="signOut" class="my-2 flex lg:my-0 mx-2 btn">
+            Sign Out
+          </a>
+
+          <router-link v-else :to="{ name: 'SignIn' }" class="my-2 flex lg:my-0 mx-2 btn">
+            Sign In
           </router-link>
         </div>
       </div>
@@ -36,6 +48,8 @@
 </template>
 
 <script>
+import firebase from 'firebase';
+
 export default {
   name: 'Header',
   data() {
@@ -44,12 +58,24 @@ export default {
       view: {
         atTopOfPage: true,
       },
+      userLoggedIn: false,
     };
   },
   beforeMount() {
     window.addEventListener('scroll', this.handleScroll);
   },
   methods: {
+    signOut() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          window.localStorage.removeItem('userId');
+          window.localStorage.removeItem('token');
+
+          this.$router.push({ name: 'Home' });
+        });
+    },
     toggleNavContent() {
       document.getElementById('nav-content').classList.toggle('hidden');
     },
@@ -58,6 +84,14 @@ export default {
         if (this.view.atTopOfPage) this.view.atTopOfPage = false;
       } else if (!this.view.atTopOfPage) this.view.atTopOfPage = true;
     },
+  },
+  mounted() {
+    const user = window.localStorage.getItem('userId');
+    const token = window.localStorage.getItem('token');
+
+    if (user && token) {
+      this.userLoggedIn = true;
+    }
   },
 };
 </script>
