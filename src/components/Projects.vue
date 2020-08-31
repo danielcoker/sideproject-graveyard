@@ -54,13 +54,13 @@
           Edit
         </router-link>
 
-        <a
-          href="#"
-          @click.prevent="deleteProject(project.id)"
+        <button
           class="my-2 lg:my-0 mx-2 btn bg-red-600"
+          @click.prevent="deleteProject(project.id)"
+          :disabled="isDeletingProject"
         >
           Delete
-        </a>
+        </button>
       </div>
     </article>
 
@@ -71,6 +71,7 @@
 </template>
 
 <script>
+import firebase from 'firebase';
 import { stripTags } from 'underscore.string';
 import Spinner from './Spinner.vue';
 
@@ -98,6 +99,7 @@ export default {
       defaultProfileImage:
         'https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg',
       userLoggedIn: false,
+      isDeletingProject: false,
     };
   },
   methods: {
@@ -108,7 +110,23 @@ export default {
       this.$emit('loadmore');
     },
     deleteProject(projectId) {
-      console.log(projectId);
+      const vm = this;
+
+      vm.isDeletingProject = true;
+
+      firebase.auth().onAuthStateChanged(() => {
+        if (this.userLoggedIn) {
+          firebase
+            .firestore()
+            .collection('projects')
+            .doc(projectId)
+            .delete()
+            .then(() => {
+              vm.$router.go(vm.$router.currentRoute);
+              vm.isDeletingProject = false;
+            });
+        }
+      });
     },
   },
   mounted() {
@@ -121,3 +139,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+button:disabled,
+button[disabled] {
+  background-color: #cccccc;
+  color: #666666;
+}
+</style>
