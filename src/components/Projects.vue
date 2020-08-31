@@ -46,6 +46,22 @@
           <timeago :datetime="project.createdAt.toDate()"></timeago>
         </p>
       </div>
+      <div class="mt-8">
+        <router-link
+          :to="{ name: 'EditProject', params: { projectId: project.id } }"
+          class="my-2 lg:my-0 btn bg-green-600"
+        >
+          Edit
+        </router-link>
+
+        <a
+          href="#"
+          @click.prevent="deleteProject(project.id)"
+          class="my-2 lg:my-0 mx-2 btn bg-red-600"
+        >
+          Delete
+        </a>
+      </div>
     </article>
 
     <div class="flex justify-center">
@@ -81,6 +97,7 @@ export default {
     return {
       defaultProfileImage:
         'https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg',
+      userLoggedIn: false,
     };
   },
   methods: {
@@ -90,6 +107,17 @@ export default {
     loadMore() {
       this.$emit('loadmore');
     },
+    deleteProject(projectId) {
+      console.log(projectId);
+    },
+  },
+  mounted() {
+    const user = window.localStorage.getItem('userId');
+    const token = window.localStorage.getItem('token');
+
+    if (user && token) {
+      this.userLoggedIn = true;
+    }
   },
 };
 </script>
