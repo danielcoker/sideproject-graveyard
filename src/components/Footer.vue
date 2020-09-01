@@ -9,16 +9,23 @@
         with the original author. A win-win for everyone.
       </p>
 
+      <p class="mt-5">
+        <a href="https://twitter.com/catalinmpit/status/1293192892677271552" class="underline">
+          Idea
+        </a>
+        by <a href="https://twitter.com/catalinmpit" class="underline">Catalin Pit</a>
+      </p>
+
       <p class="mt-10 text-sm">
-        &copy; 2020 Daniel Coker
+        Made with &#10084; by Daniel Coker
       </p>
 
       <div class="flex justify-center space-x-5 mt-5">
-        <a href="#">
+        <a href="https://github.com/danielcoker/sideproject-graveyard">
           <img src="../assets/github.svg" alt="GitHub" />
         </a>
-        <a href="#">
-          <img src="../assets/twitter.svg" alt="GitHub" />
+        <a href="https://twitter.com/danielcoker_">
+          <img src="../assets/twitter.svg" alt="Twitter" />
         </a>
       </div>
     </div>
