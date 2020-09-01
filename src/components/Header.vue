@@ -28,6 +28,14 @@
           </router-link>
 
           <router-link
+            v-if="userLoggedIn"
+            :to="{ name: 'Dashboard' }"
+            class="my-2 flex lg:my-0 mx-2"
+          >
+            Dashboard
+          </router-link>
+
+          <router-link
             :to="{ name: 'Search' }"
             class="my-2 flex lg:my-0 mx-2 pr-2 lg:border-r lg:border-dark"
           >
