@@ -49,7 +49,7 @@
           </li>
         </ul>
 
-        <div class="mt-8">
+        <div class="mt-8" v-if="userLoggedIn && project.user === loggedInUser">
           <router-link
             :to="{ name: 'EditProject', params: { projectId: project.id } }"
             class="my-2 lg:my-0 btn bg-green-600"
@@ -101,6 +101,8 @@ export default {
         repoURL: null,
       },
       isDeletingProject: false,
+      userLoggedIn: false,
+      loggedInUser: null,
     };
   },
   methods: {
@@ -126,6 +128,14 @@ export default {
   mounted() {
     const vm = this;
 
+    const user = window.localStorage.getItem('userId');
+    const token = window.localStorage.getItem('token');
+
+    if (user && token) {
+      vm.userLoggedIn = true;
+      vm.loggedInUser = user;
+    }
+
     const projectRef = firebase
       .firestore()
       .collection('projects')
@@ -148,6 +158,7 @@ export default {
             .then((userDoc) => {
               if (userDoc.exists) {
                 vm.user = {
+                  id: userDoc.id,
                   displayName: userDoc.data().displayName,
                   photoURL: userDoc.data().photoURL,
                 };
