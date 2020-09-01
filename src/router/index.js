@@ -73,7 +73,6 @@ router.beforeEach((to, from, next) => {
       if (!user) {
         next({
           name: 'SignIn',
-          params: { nextUrl: to.fullPath },
         });
       } else {
         next();
