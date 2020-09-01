@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import firebase from 'firebase';
 import Home from '../views/Home.vue';
 
 Vue.use(VueRouter);
@@ -33,16 +34,25 @@ const routes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
+    meta: {
+      requiresAuth: true,
+    },
     component: () => import(/* webPackChunkName: "dasboard" */ '../views/Dashboard.vue'),
   },
   {
     path: '/project/new',
     name: 'AddProject',
+    meta: {
+      requiresAuth: true,
+    },
     component: () => import(/* webPackChunkName: "addProject" */ '../views/AddProject.vue'),
   },
   {
     path: '/projects/:projectId/edit',
     name: 'EditProject',
+    meta: {
+      requiresAuth: true,
+    },
     component: () => import(/* webPackChunkName: "editProject" */ '../views/EditProject.vue'),
   },
 ];
@@ -55,6 +65,24 @@ const router = new VueRouter({
   scrollBehavior(to, from, savedPosition) {
     return { x: 0, y: 0 };
   },
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (!user) {
+        next({
+          name: 'SignIn',
+          params: { nextUrl: to.fullPath },
+        });
+      } else {
+        next();
+      }
+    });
+  } else {
+    next();
+  }
+  next();
 });
 
 export default router;
