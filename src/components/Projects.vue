@@ -46,7 +46,7 @@
           <timeago :datetime="project.createdAt.toDate()"></timeago>
         </p>
       </div>
-      <div class="mt-8">
+      <div class="mt-8" v-if="userLoggedIn && project.user.id === loggedInUser">
         <router-link
           :to="{ name: 'EditProject', params: { projectId: project.id } }"
           class="my-2 lg:my-0 btn bg-green-600"
@@ -100,6 +100,7 @@ export default {
         'https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg',
       userLoggedIn: false,
       isDeletingProject: false,
+      loggedInUser: null,
     };
   },
   methods: {
@@ -135,6 +136,7 @@ export default {
 
     if (user && token) {
       this.userLoggedIn = true;
+      this.loggedInUser = user;
     }
   },
 };

@@ -46,6 +46,7 @@ export default {
         .then((userDoc) => {
           if (userDoc.exists) {
             const user = {
+              id: userDoc.id,
               displayName: userDoc.data().displayName,
               photoURL: userDoc.data().photoURL,
             };
