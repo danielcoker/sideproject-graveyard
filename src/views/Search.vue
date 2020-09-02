@@ -75,7 +75,7 @@ export default {
           .firestore()
           .collection('projects')
           .orderBy('createdAt', 'desc')
-          .where('tags', 'array-contains', vm.query.toLowerCase())
+          .where('tags', 'array-contains', vm.query.toLowerCase().trim())
           .startAfter(vm.lastVisible)
           .limit(10);
 
@@ -130,7 +130,7 @@ export default {
         .firestore()
         .collection('projects')
         .orderBy('createdAt', 'desc')
-        .where('tags', 'array-contains', vm.query.toLowerCase())
+        .where('tags', 'array-contains', vm.query.toLowerCase().trim())
         .limit(10);
 
       projects.get().then((documentSnapshots) => {

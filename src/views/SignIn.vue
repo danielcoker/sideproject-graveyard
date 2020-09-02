@@ -13,6 +13,7 @@
           <img src="../assets/github.svg" alt="GitHub" />
           <p>Sign in with GitHub</p>
         </a>
+        <p class="flex justify-center text-red-600">{{ message }}</p>
 
         <div class="flex justify-center">
           <Spinner :loading="signInLoading" />
@@ -40,6 +41,7 @@ export default {
   data() {
     return {
       signInLoading: false,
+      message: null,
     };
   },
   methods: {
@@ -84,7 +86,9 @@ export default {
           }
         })
         .catch(() => {
-          // Error
+          window.localStorage.removeItem('SignInWithRedirect');
+          this.$router.go(this.$router.currentRoute);
+          this.message = 'Netowork Error. Please try again.';
         });
     }
   },

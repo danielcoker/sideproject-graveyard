@@ -169,7 +169,9 @@ export default {
         auth: this.token,
       });
 
-      const userRepos = await this.octokit.repos.listForAuthenticatedUser();
+      const githubUser = await this.octokit.users.getAuthenticated();
+
+      const userRepos = await this.octokit.repos.listForUser({ username: githubUser.data.login });
 
       this.repos = userRepos.data.map((userRepo) => userRepo.full_name);
     });
