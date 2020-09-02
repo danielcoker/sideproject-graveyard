@@ -94,7 +94,7 @@ import 'vue-select/dist/vue-select.css';
 import '../assets/css/markdown.css';
 
 export default {
-  name: 'AddProject',
+  name: 'EditProject',
   components: {
     Header,
     Footer,
@@ -142,7 +142,7 @@ export default {
             .set({ ...vm.project })
             .then(() => {
               vm.$router.push({
-                name: 'ProjectDetails',
+                name: 'ViewProject',
                 params: { projectId },
               });
             })
@@ -182,7 +182,9 @@ export default {
         auth: this.token,
       });
 
-      const userRepos = await this.octokit.repos.listForAuthenticatedUser();
+      const githubUser = await this.octokit.users.getAuthenticated();
+
+      const userRepos = await this.octokit.repos.listForUser({ username: githubUser.data.login });
 
       this.repos = userRepos.data.map((userRepo) => userRepo.full_name);
 
