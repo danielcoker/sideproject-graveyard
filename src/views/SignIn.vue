@@ -84,7 +84,8 @@ export default {
           }
         })
         .catch(() => {
-          // Error
+          window.localStorage.removeItem('SignInWithRedirect');
+          this.$router.push({ name: 'SignIn' });
         });
     }
   },
